@@ -1,4 +1,5 @@
 -- PostgreSQL
+CREATE DATABASE beauty_salon_db;
 -- USE beauty_salon_db;
 
 CREATE DATABASE beauty_salon_db;

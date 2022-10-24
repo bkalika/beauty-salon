@@ -30,6 +30,8 @@ public class ConnectionManager {
     }
 
     public Connection getConnection() throws SQLException {
+        LOGGER.trace("Starting tracing ConnectionManager#getConnection");
+
         return dataSource.getConnection();
     }
 }
