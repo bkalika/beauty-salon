@@ -2,7 +2,8 @@ package com.bsalon.daos.jdbc;
 
 import com.bsalon.daos.DAOException;
 import com.bsalon.daos.IUserDAO;
-import com.bsalon.datasource.ConnectionManager;
+import com.bsalon.daos.connection.ConnectionPool;
+import com.bsalon.daos.connection.ProxyConnection;
 
 import com.bsalon.models.Role;
 import com.bsalon.models.User;
@@ -12,6 +13,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.bsalon.daos.jdbc.Util.createStatement;
 import static com.bsalon.constants.SQLConstants.*;
 
 /**
@@ -21,7 +23,6 @@ import static com.bsalon.constants.SQLConstants.*;
  */
 public class UserDAOJDBC implements IUserDAO {
     private static final Logger LOGGER = Logger.getLogger(UserDAOJDBC.class);
-    private final ConnectionManager connectionManager = ConnectionManager.getInstance();
 
     /**
      * Returns the user from the database matching the given id value.
@@ -35,10 +36,7 @@ public class UserDAOJDBC implements IUserDAO {
 
         User user = null;
 
-        try(
-                Connection connection = connectionManager.getConnection();
-                PreparedStatement preparedStatement = connection.prepareStatement(SQL_SELECT_USER_BY_ID)
-                ) {
+        try(PreparedStatement preparedStatement = createStatement(SQL_SELECT_USER_BY_ID)) {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -76,24 +74,15 @@ public class UserDAOJDBC implements IUserDAO {
     public boolean create(User user) throws IllegalArgumentException, DAOException {
         LOGGER.trace("Starting tracing UserDAOJDBC#create");
 
-        try(Connection connection = connectionManager.getConnection()) {
-            if(connection != null) {
-                try(PreparedStatement preparedStatement = connection.prepareStatement(SQL_INSERT_USER)) {
-                    connection.setAutoCommit(false);
-                    preparedStatement.setString(1, user.getEmail());
-                    preparedStatement.setString(2, user.getPassword());
-                    preparedStatement.setString(3, user.getName());
-                    preparedStatement.setInt(4, user.getRole().getId());
-                    preparedStatement.executeUpdate();
-                    connection.commit();
-                    return true;
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
-                    connection.rollback();
-                }
-            }
-        } catch (NullPointerException | SQLException e) {
-            LOGGER.error(e.getMessage(), e);
+        try(PreparedStatement preparedStatement = createStatement(SQL_INSERT_USER)) {
+            preparedStatement.setString(1, user.getEmail());
+            preparedStatement.setString(2, user.getPassword());
+            preparedStatement.setString(3, user.getName());
+            preparedStatement.setInt(4, user.getRole().getId());
+            preparedStatement.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
         }
         return false;
     }
@@ -109,22 +98,13 @@ public class UserDAOJDBC implements IUserDAO {
     public void update(User user) throws IllegalArgumentException, DAOException {
         LOGGER.trace("Starting tracing UserDAOJDBC#update");
 
-        try(Connection connection = connectionManager.getConnection()) {
-            if(connection != null) {
-                try(PreparedStatement preparedStatement = connection.prepareStatement(SQL_UPDATE_USER)) {
-                    connection.setAutoCommit(false);
-                    preparedStatement.setString(1, user.getName());
-                    preparedStatement.setDouble(2, user.getRating());
-                    preparedStatement.setLong(3, user.getId());
-                    preparedStatement.executeUpdate();
-                    connection.commit();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
-                    connection.rollback();
-                }
-            }
-        } catch (NullPointerException | SQLException e) {
-            LOGGER.error(e.getMessage(), e);
+        try(PreparedStatement preparedStatement = createStatement(SQL_UPDATE_USER)) {
+            preparedStatement.setString(1, user.getName());
+            preparedStatement.setDouble(2, user.getRating());
+            preparedStatement.setLong(3, user.getId());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
         }
     }
 
@@ -138,9 +118,7 @@ public class UserDAOJDBC implements IUserDAO {
     public void delete(User user) throws DAOException {
         LOGGER.trace("Starting tracing UserDAOJDBC#delete");
 
-        try(Connection connection = connectionManager.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(SQL_DELETE_USER)
-        ){
+        try(PreparedStatement preparedStatement = createStatement(SQL_DELETE_USER)){
             preparedStatement.setLong(1, user.getId());
             preparedStatement.executeUpdate();
         } catch (NullPointerException | SQLException e) {
@@ -160,10 +138,7 @@ public class UserDAOJDBC implements IUserDAO {
 
         User user = null;
 
-        try(
-                Connection connection = connectionManager.getConnection();
-                PreparedStatement preparedStatement = connection.prepareStatement(SQL_SELECT_USER_BY_EMAIL)
-        ) {
+        try(PreparedStatement preparedStatement = createStatement(SQL_SELECT_USER_BY_EMAIL)) {
             preparedStatement.setString(1, email);
             ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -200,10 +175,10 @@ public class UserDAOJDBC implements IUserDAO {
         List<String> emails = new ArrayList<>();
 
         try (
-                Connection connection = connectionManager.getConnection();
+                ProxyConnection connection = ConnectionPool.getInstance().getConnection();
                 Statement statement = connection.createStatement();
-                ResultSet resultSet = statement.executeQuery(SQL_SELECT_EMAILS_BY_YESTERDAYS_DONE_REQUEST);
-                ) {
+                ResultSet resultSet = statement.executeQuery(SQL_SELECT_EMAILS_BY_YESTERDAYS_DONE_REQUEST)
+        ) {
             while(resultSet.next()) {
                 emails.add(resultSet.getString("u_email"));
             }
@@ -218,7 +193,7 @@ public class UserDAOJDBC implements IUserDAO {
         List<User> hairdressers = new ArrayList<>();
 
         try (
-                Connection connection = connectionManager.getConnection();
+                ProxyConnection connection = ConnectionPool.getInstance().getConnection();
                 Statement statement = connection.createStatement();
                 ResultSet resultSet = statement.executeQuery(sqlSelectHairdressers)
                 ) {

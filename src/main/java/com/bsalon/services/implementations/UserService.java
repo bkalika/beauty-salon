@@ -62,6 +62,13 @@ public class UserService implements IUserService {
         return userDAO.findByEmail(email);
     }
 
+    @Override
+    public User find(Long id) {
+        LOGGER.trace("Starting tracing UserService#find");
+
+        return userDAO.find(id);
+    }
+
     private boolean isAlreadyExist(String email) {
         LOGGER.trace("Starting tracing UserService#isAlreadyExist");
 
@@ -96,5 +103,12 @@ public class UserService implements IUserService {
         LOGGER.trace("Starting tracing UserService#listHairdressers");
 
         return userDAO.listHairdressers();
+    }
+
+    @Override
+    public void delete(User user) {
+        LOGGER.trace("Starting tracing UserService#delete");
+
+        userDAO.delete(user);
     }
 }
