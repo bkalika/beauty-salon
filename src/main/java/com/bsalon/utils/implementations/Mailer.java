@@ -1,4 +1,4 @@
-package com.bsalon.listeners;
+package com.bsalon.utils.implementations;
 
 import com.bsalon.services.IEmailService;
 import com.bsalon.services.implementations.EmailService;
@@ -11,7 +11,7 @@ public class Mailer extends Thread {
     private static final Logger LOGGER = Logger.getLogger(Mailer.class);
 
     private String email;
-    IEmailService emailService = new EmailService();
+    private final IEmailService emailService = new EmailService();
 
     @Override
     public void run() {

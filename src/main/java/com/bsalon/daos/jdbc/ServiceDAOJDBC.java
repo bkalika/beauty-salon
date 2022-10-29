@@ -2,7 +2,8 @@ package com.bsalon.daos.jdbc;
 
 import com.bsalon.daos.DAOException;
 import com.bsalon.daos.IServiceDAO;
-import com.bsalon.datasource.ConnectionManager;
+import com.bsalon.daos.connection.ConnectionPool;
+import com.bsalon.daos.connection.ProxyConnection;
 import com.bsalon.models.*;
 import org.apache.log4j.Logger;
 
@@ -10,6 +11,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.bsalon.daos.jdbc.Util.createStatement;
 import static com.bsalon.constants.SQLConstants.*;
 
 /**
@@ -20,18 +22,13 @@ import static com.bsalon.constants.SQLConstants.*;
 public class ServiceDAOJDBC implements IServiceDAO {
     private static final Logger LOGGER = Logger.getLogger(ServiceDAOJDBC.class);
 
-    private final ConnectionManager connectionManager = ConnectionManager.getInstance();
-
     @Override
     public Service find(Long id) throws DAOException {
         LOGGER.trace("Start tracing ServiceDAOJDBC#find");
 
         Service service = null;
 
-        try(
-                Connection connection = connectionManager.getConnection();
-                PreparedStatement preparedStatement = connection.prepareStatement(SQL_SELECT_SERVICE_BY_ID)
-        ) {
+        try(PreparedStatement preparedStatement = createStatement(SQL_SELECT_SERVICE_BY_ID)) {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -52,7 +49,7 @@ public class ServiceDAOJDBC implements IServiceDAO {
         List<Service> services = new ArrayList<>();
 
         try(
-                Connection connection = connectionManager.getConnection();
+                ProxyConnection connection = ConnectionPool.getInstance().getConnection();
                 Statement statement = connection.createStatement();
                 ResultSet resultSet = statement.executeQuery(SQL_SELECT_SERVICE)
         ) {
@@ -70,22 +67,13 @@ public class ServiceDAOJDBC implements IServiceDAO {
     public boolean create(Service service) throws IllegalArgumentException, DAOException {
         LOGGER.trace("Starting tracing ServiceDAOJDBC#create");
 
-        try(Connection connection = connectionManager.getConnection()) {
-            if(connection != null) {
-                try(PreparedStatement preparedStatement = connection.prepareStatement(SQL_INSERT_SERVICE)) {
-                    connection.setAutoCommit(false);
-                    preparedStatement.setString(1, service.getName());
-                    preparedStatement.setBigDecimal(2, service.getPrice());
-                    preparedStatement.executeUpdate();
-                    connection.commit();
-                    return true;
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
-                    connection.rollback();
-                }
-            }
-        } catch (NullPointerException | SQLException e) {
-            LOGGER.error(e.getMessage(), e);
+        try(PreparedStatement preparedStatement = createStatement(SQL_INSERT_SERVICE)) {
+            preparedStatement.setString(1, service.getName());
+            preparedStatement.setBigDecimal(2, service.getPrice());
+            preparedStatement.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
         }
         return false;
     }
@@ -94,22 +82,13 @@ public class ServiceDAOJDBC implements IServiceDAO {
     public void update(Service service) throws IllegalArgumentException, DAOException {
         LOGGER.trace("Starting tracing ServiceDAOJDBC#update");
 
-        try(Connection connection = connectionManager.getConnection()) {
-            if(connection != null) {
-                try(PreparedStatement preparedStatement = connection.prepareStatement(SQL_UPDATE_SERVICE)) {
-                    connection.setAutoCommit(false);
-                    preparedStatement.setString(1, service.getName());
-                    preparedStatement.setBigDecimal(2, service.getPrice());
-                    preparedStatement.setLong(3, service.getId());
-                    preparedStatement.executeUpdate();
-                    connection.commit();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
-                    connection.rollback();
-                }
-            }
-        } catch (NullPointerException | SQLException e) {
-            LOGGER.error(e.getMessage(), e);
+        try(PreparedStatement preparedStatement = createStatement(SQL_UPDATE_SERVICE)) {
+            preparedStatement.setString(1, service.getName());
+            preparedStatement.setBigDecimal(2, service.getPrice());
+            preparedStatement.setLong(3, service.getId());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
         }
     }
 
@@ -117,9 +96,7 @@ public class ServiceDAOJDBC implements IServiceDAO {
     public void delete(Service service) throws DAOException {
         LOGGER.trace("Starting tracing ServiceDAOJDBC#delete");
 
-        try(Connection connection = connectionManager.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(SQL_DELETE_SERVICE)
-        ){
+        try(PreparedStatement preparedStatement = createStatement(SQL_DELETE_SERVICE)){
             preparedStatement.setLong(1, service.getId());
             preparedStatement.executeUpdate();
         } catch (NullPointerException | SQLException e) {

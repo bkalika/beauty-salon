@@ -2,6 +2,8 @@ package com.bsalon.controllers;
 
 import com.bsalon.controllers.commands.FrontCommand;
 import com.bsalon.controllers.commands.UnknownCommand;
+import com.bsalon.daos.connection.ConnectionPool;
+import com.bsalon.exceptions.ConnectionException;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
@@ -18,6 +20,28 @@ import java.util.*;
 @WebServlet("/commands")
 public class FrontController extends HttpServlet {
     private static final Logger LOGGER = Logger.getLogger(FrontController.class);
+
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        try {
+            ConnectionPool.getInstance().initialize();
+        } catch (ConnectionException e) {
+            LOGGER.error("Servlet wasn't init!");
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void destroy() {
+        try {
+            ConnectionPool.getInstance().destroy();
+            super.destroy();
+        } catch (ConnectionException e) {
+            LOGGER.error("Servlet wasn't destroy!");
+            throw new RuntimeException(e);
+        }
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
@@ -69,7 +93,7 @@ public class FrontController extends HttpServlet {
 
     public static Map<String, String> getQueryMap(String query) {
         String[] params = query.split("&");
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<>();
 
         for (String param : params) {
             String name = param.split("=")[0];

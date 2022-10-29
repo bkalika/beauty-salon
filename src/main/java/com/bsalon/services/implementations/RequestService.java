@@ -4,7 +4,7 @@ import com.bsalon.daos.DaoFactory;
 import com.bsalon.daos.IRequestDAO;
 import com.bsalon.daos.IServiceHairdresserDAO;
 import com.bsalon.daos.IUserDAO;
-import com.bsalon.listeners.Mailer;
+import com.bsalon.utils.implementations.Mailer;
 import com.bsalon.models.Request;
 import com.bsalon.models.ServiceHairdresser;
 import com.bsalon.models.Status;

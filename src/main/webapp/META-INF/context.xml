@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<Context>
-    <Resource name="jdbc/beauty_salon" type="javax.sql.DataSource"
-              maxTotal="100" maxIdle="50" maxWaitMillis="10000"
-              url="jdbc:postgresql://localhost:5432/beauty_salon_db?useUnicode=true&amp;characterEncoding=UTF-8"
-              username="postgres" password="postgres"
-              driverClassName="org.postgresql.Driver"/>
-</Context>

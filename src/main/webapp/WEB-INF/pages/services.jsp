@@ -45,13 +45,14 @@
                             </a>
 
                             <div>
-                                <select name="command=ServicePage&hairdresserName" form="hairdresser-name">
+                                <select name="hairdresserName" form="hairdresser-name">
                                     <c:forEach var="hairdresser" items="${hairdressers}">
                                         <option value="${hairdresser.name}&lang=${current}"
                                             ${hairdresser.name == hairdresserName ? 'selected="selected"' : ''}>${hairdresser.name}</option>
                                     </c:forEach>
                                 </select>
                                 <form method="get" action="/commands" id="hairdresser-name" accept-charset="UTF-8">
+                                    <input type="hidden" name="command" value="ServicePage"/>
                                     <input type="submit" value="Filter">
                                 </form>
                             </div>

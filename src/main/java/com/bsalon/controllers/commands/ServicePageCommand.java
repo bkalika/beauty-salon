@@ -63,12 +63,13 @@ public class ServicePageCommand extends FrontCommand {
 //        List<ServiceHairdresser> filterList = serviceHairdressers;
 
         String queryString = request.getQueryString();
+        String s = request.getParameter("command");
+        System.out.println("s= " + s);
         String command = queryString
                 .replace("%3D", "=")
                 .replace("%26", "&")
                 .replace("+", " ")
-                .replace("%3A", ":")
-                ;
+                .replace("%3A", ":");
 
         Map<String, String> query = getQueryMap(command);
         if(query.get("hairdresserName") != null) {
