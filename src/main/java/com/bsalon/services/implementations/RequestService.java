@@ -70,24 +70,6 @@ public class RequestService implements IRequestService {
     }
 
     @Override
-    public void done(Request request) {
-        LOGGER.trace("Starting tracing RequestService#done");
-
-        Mailer mailer = new Mailer();
-        mailer.setEmail(request.getClient().getEmail());
-        mailer.start();
-
-        requestDAO.updateStatus(request, Status.DONE);
-    }
-
-    @Override
-    public void cancel(Request request) {
-        LOGGER.trace("Starting tracing RequestService#cancel");
-
-        requestDAO.updateStatus(request, Status.CANCELED);
-    }
-
-    @Override
     public void update(Request request) {
         LOGGER.trace("Starting tracing RequestService#update");
 

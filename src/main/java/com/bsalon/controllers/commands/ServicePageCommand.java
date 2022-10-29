@@ -28,8 +28,6 @@ public class ServicePageCommand extends FrontCommand {
         LOGGER.trace("Start tracing ServicePageCommand#process");
 
         HttpSession session = request.getSession();
-        Role role = Role.getByName((String) session.getAttribute("role"));
-        User user = (User) session.getAttribute("user");
         IServiceHairdresserService serviceHairdresserService = new ServiceHairdresserService();
         List<ServiceHairdresser> serviceHairdressers = serviceHairdresserService.list();
 
@@ -59,8 +57,6 @@ public class ServicePageCommand extends FrontCommand {
                 serviceHairdressers.sort(Comparator.comparing((ServiceHairdresser sh) -> sh.getService().getPrice()));
             }
         }
-
-//        List<ServiceHairdresser> filterList = serviceHairdressers;
 
         String queryString = request.getQueryString();
         String s = request.getParameter("command");

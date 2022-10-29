@@ -1,6 +1,6 @@
 package com.bsalon.daos.jdbc;
 
-import com.bsalon.daos.DAOException;
+import com.bsalon.exceptions.DAOException;
 import com.bsalon.daos.IRequestDAO;
 import com.bsalon.daos.connection.ConnectionPool;
 import com.bsalon.daos.connection.ProxyConnection;
@@ -116,25 +116,6 @@ public class RequestDAOJDBC implements IRequestDAO {
             preparedStatement.setTimestamp(4, Timestamp.valueOf(request.getDate()));
             preparedStatement.setBoolean(5, request.isPaid());
             preparedStatement.setLong(6, request.getId());
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            LOGGER.error(e.getMessage());
-        }
-    }
-
-    /**
-     * Update the request status in the database. The request ID must not be null, otherwise it will throw
-     * @param request The request to be updated the status in the database.
-     * @throws IllegalArgumentException If the request ID is null.
-     * @throws DAOException If something fails at database level.
-     */
-    @Override
-    public void updateStatus(Request request, Status status) {
-        LOGGER.trace("Starting tracing RequestDAOJDBC#updateStatus");
-
-        try (PreparedStatement preparedStatement = createStatement(SQL_UPDATE_REQUEST_STATUS)) {
-            preparedStatement.setString(1, status.name());
-            preparedStatement.setLong(2, request.getId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             LOGGER.error(e.getMessage());

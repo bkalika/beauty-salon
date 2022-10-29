@@ -15,6 +15,8 @@ public class FeedbackPageCommand extends FrontCommand{
 
     @Override
     public void process() throws ServletException, IOException {
+        LOGGER.trace(String.format("Start tracing %s#process", FeedbackPageCommand.class));
+
         HttpSession session = request.getSession();
         String role = (String) session.getAttribute("role");
 

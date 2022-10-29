@@ -1,6 +1,6 @@
 package com.bsalon.daos.jdbc;
 
-import com.bsalon.daos.DAOException;
+import com.bsalon.exceptions.DAOException;
 import com.bsalon.daos.IUserDAO;
 import com.bsalon.daos.connection.ConnectionPool;
 import com.bsalon.daos.connection.ProxyConnection;
@@ -164,29 +164,6 @@ public class UserDAOJDBC implements IUserDAO {
         LOGGER.trace("Start tracing UserDAOJDBC#listHairdressers");
 
         return getUsers(SQL_SELECT_HAIRDRESSERS);
-    }
-
-
-    // not used
-    @Override
-    public List<String> listEmailsByTomorrowDoneRequest() {
-        LOGGER.trace("Start tracing UserDAOJDBC#listEmails");
-
-        List<String> emails = new ArrayList<>();
-
-        try (
-                ProxyConnection connection = ConnectionPool.getInstance().getConnection();
-                Statement statement = connection.createStatement();
-                ResultSet resultSet = statement.executeQuery(SQL_SELECT_EMAILS_BY_YESTERDAYS_DONE_REQUEST)
-        ) {
-            while(resultSet.next()) {
-                emails.add(resultSet.getString("u_email"));
-            }
-        } catch (NullPointerException | SQLException e) {
-            LOGGER.error(e.getMessage(), e);
-        }
-
-        return emails;
     }
 
     private List<User> getUsers(String sqlSelectHairdressers) {

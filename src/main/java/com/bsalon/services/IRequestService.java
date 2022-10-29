@@ -16,7 +16,5 @@ public interface IRequestService {
     List<Request> listByHairdresser(Long id);
     List<Request> listByClient(Long id);
     Request get(Long id);
-    void done(Request request);
-    void cancel(Request request);
     void update(Request request);
 }

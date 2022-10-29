@@ -17,5 +17,4 @@ public interface IUserService {
     User find(Long id);
     List<User> listClients();
     List<User> listHairdressers();
-    void delete(User user);
 }

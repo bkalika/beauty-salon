@@ -1,5 +1,6 @@
 package com.bsalon.daos;
 
+import com.bsalon.exceptions.DAOException;
 import com.bsalon.models.User;
 
 import java.util.List;
@@ -16,5 +17,4 @@ public interface IUserDAO extends IDao<User> {
     User findByEmail(String email) throws DAOException;
     List<User> listClients();
     List<User> listHairdressers();
-    List<String> listEmailsByTomorrowDoneRequest();
 }

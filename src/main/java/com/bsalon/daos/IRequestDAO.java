@@ -13,5 +13,4 @@ import java.util.List;
 public interface IRequestDAO extends IDao<Request>  {
     List<Request> listByHairdresser(Long id);
     List<Request> listByClient(Long id);
-    void updateStatus(Request request, Status status);
 }

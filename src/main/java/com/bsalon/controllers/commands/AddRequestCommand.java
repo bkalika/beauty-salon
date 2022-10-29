@@ -59,7 +59,7 @@ public class AddRequestCommand extends FrontCommand {
                 LocalDateTime dateTime = LocalDateTime.parse(date, formatter);
 
                 ValidationService validationService = new ValidationService();
-                
+
                 if(!validationService.isRequestDataValid(dateTime)) {
                     errorMessage = "Unacceptable period of time or invalid date";
                     throw new RequestFailException(errorMessage);

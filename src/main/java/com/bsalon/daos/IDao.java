@@ -1,5 +1,7 @@
 package com.bsalon.daos;
 
+import com.bsalon.exceptions.DAOException;
+
 import java.util.List;
 
 /**

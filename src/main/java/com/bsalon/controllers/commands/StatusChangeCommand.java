@@ -30,14 +30,11 @@ public class StatusChangeCommand extends FrontCommand {
         User user = (User) session.getAttribute("user");
         String status = request.getParameter("requestStatus");
         String date = request.getParameter("date");
-//        Long clientId = Long.parseLong(request.getParameter("clientId"));
         Request selectedRequest = requestService.get(Long.valueOf(request.getParameter("requestId"))) ;
 
         if(status != null && status.equalsIgnoreCase("done")) {
             selectedRequest.setStatus(Status.DONE);
-//            requestService.done(selectedRequest);
         } else if(status != null && status.equalsIgnoreCase("cancel")) {
-//            requestService.cancel(selectedRequest);
             selectedRequest.setStatus(Status.CANCELED);
         } else if(status != null && status.equalsIgnoreCase("paid")) {
             selectedRequest.setPaid(true);

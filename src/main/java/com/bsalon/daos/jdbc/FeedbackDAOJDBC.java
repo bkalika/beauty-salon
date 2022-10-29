@@ -1,6 +1,6 @@
 package com.bsalon.daos.jdbc;
 
-import com.bsalon.daos.DAOException;
+import com.bsalon.exceptions.DAOException;
 import com.bsalon.daos.IFeedbackDAO;
 import com.bsalon.daos.connection.ConnectionPool;
 import com.bsalon.daos.connection.ProxyConnection;

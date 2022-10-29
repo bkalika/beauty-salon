@@ -1,4 +1,4 @@
-package com.bsalon.daos;
+package com.bsalon.exceptions;
 
 /**
  * @author @bkalika

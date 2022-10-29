@@ -56,18 +56,16 @@ public class FrontController extends HttpServlet {
     private FrontCommand getCommand(HttpServletRequest request) {
         try {
             String requestURL = request.getRequestURL().toString();
-            String queryString = request.getQueryString();
-            String command = queryString
+            String queryString = request.getQueryString()
                     .replace("%3D", "=")
-                    .replace("%26", "&");
+                    .replace("%26", "&")
+                    .replace("+", " ")
+                    .replace("%3A", ":");
 
-            String url = requestURL + "?" + command;
-
-            Map<String, String> query = getQueryMap(command);
+            Map<String, String> query = getQueryMap(queryString);
 
             Class<?> type = Class.forName(String.format(
                     "com.bsalon.controllers.commands.%sCommand",
-//                    request.getParameter("command")
                     query.get("command")
             ));
 

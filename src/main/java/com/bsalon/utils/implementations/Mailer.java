@@ -16,8 +16,8 @@ public class Mailer extends Thread {
     @Override
     public void run() {
         try {
-            emailService.send(email);
             Thread.sleep(1000); // 1 day: 86400000
+            emailService.send(email);
         } catch (Exception e) {
             LOGGER.error("Mailer error occurred!");
         }

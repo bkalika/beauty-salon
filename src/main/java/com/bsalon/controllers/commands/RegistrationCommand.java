@@ -39,7 +39,6 @@ public class RegistrationCommand extends FrontCommand {
                     session.setAttribute("role", user.getRole().getName());
                     session.setAttribute("lastCommand", "Registration");
 
-//                    forward("home");
                     response.sendRedirect("/commands?command=RequestPage");
                 }
             } catch (Exception e) {

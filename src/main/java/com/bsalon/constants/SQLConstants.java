@@ -16,12 +16,6 @@ public class SQLConstants {
     public static final String SQL_INSERT_USER = "INSERT INTO usr (email, password, name, role_id) VALUES (?, ?, ?, ?);";
     public static final String SQL_UPDATE_USER = "UPDATE usr SET name = ?, rating = ? WHERE id = ?;";
     public static final String SQL_DELETE_USER = "DELETE FROM usr WHERE id = ?;";
-    public static final String SQL_SELECT_EMAILS_BY_YESTERDAYS_DONE_REQUEST = "SELECT u.email u_email\n" +
-            "FROM usr u\n" +
-            "JOIN request r on u.id = r.client_id\n" +
-            "WHERE r.status = 'DONE'\n" +
-            "AND r.date BETWEEN NOW() - INTERVAL '48 HOURS' AND NOW() - INTERVAL '24 HOURS'\n" +
-            "ORDER BY r.date;";
 
     public static final String SQL_SELECT_REQUESTS = "SELECT r.id, r.servicehairdresser_id, r.client_id, r.status, r.date, r.paid r_paid, sh.id, sh.service_id, sh.hairdresser_id, s.name s_name, s.price s_price, h.name h_name, h.email h_email, h.rating h_rating, c.name c_name, c.email c_email\n" +
             "FROM request r\n" +
@@ -55,7 +49,6 @@ public class SQLConstants {
             "ORDER BY status, date DESC;";
     public static final String SQL_INSERT_REQUEST = "INSERT INTO request(servicehairdresser_id, client_id, date) VALUES (?, ?, ?);";
     public static final String SQL_UPDATE_REQUEST = "UPDATE request SET servicehairdresser_id = ?, client_id = ?, status = ?, date = ?, paid = ? WHERE id = ?;";
-    public static final String SQL_UPDATE_REQUEST_STATUS = "UPDATE request SET status = ? WHERE id = ?;";
     public static final String SQL_DELETE_REQUEST = "DELETE FROM request WHERE id = ?;";
 
     public static final String SQL_SELECT_SERVICEHAIRDRESSER = "SELECT sh.id sh_id, s.id s_id, h.id h_id, s.name s_name, s.price s_price, h.name h_name, h.email h_email, h.rating h_rating\n" +

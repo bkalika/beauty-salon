@@ -82,7 +82,7 @@ public class UserService implements IUserService {
             throw new InvalidUserDataException("Invalid email");
 
         if(!validationService.isPasswordValid(password))
-            throw new InvalidUserDataException("Invalid password. It has to be more than 1 digits.");
+            throw new InvalidUserDataException("Invalid password. The password must contain minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character.");
 
         if(!validationService.isConfirmationPassMatched(password, passwordConfirm))
             throw new InvalidUserDataException("Password did not match");
@@ -103,12 +103,5 @@ public class UserService implements IUserService {
         LOGGER.trace("Starting tracing UserService#listHairdressers");
 
         return userDAO.listHairdressers();
-    }
-
-    @Override
-    public void delete(User user) {
-        LOGGER.trace("Starting tracing UserService#delete");
-
-        userDAO.delete(user);
     }
 }
